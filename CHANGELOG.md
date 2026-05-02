@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.13] - 2026-05-02
+
+### Changed
+- **Sonarr** 4.0.16 → 4.0.17 (patch)
+- **Radarr** 6.0.4 → 6.1.1 (minor)
+
+---
+
 ## [1.7.12] - 2026-04-28
 
 ### Changed
