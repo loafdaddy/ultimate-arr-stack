@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [1.7.14] - 2026-05-23
 
+### Changed
+- **Pi-hole** 2026.04.1 → 2026.05.0
+- **Cloudflared** 2026.3.0 → 2026.5.0
+- **Traefik** v3.6 → v3.7
+
 ### Fixed
 - **`configure-apps.sh` hanging at "Configuring qBittorrent..."**: `wait_for_service` polled with `curl` and no `--max-time`, so a single hung connection (qBit accepting TCP but not responding during Gluetun init) silently extended the advertised 60s timeout into many minutes. Now bounded per-call, bounded wall-clock, with a 10s heartbeat showing the last HTTP code so users know it's working. Reported on Reddit
 - **Cloudflared `No file cert.pem` on tunnel create**: the `sudo chown -R 65532:65532 cloudflared/` step (required on UGOS/Synology where NAS ACLs override POSIX perms) was buried as a "troubleshooting note" after the `tunnel login` command. Most users hit this on first run before seeing the note. Promoted to a required pre-step. Dropped the `chmod 777` line — doesn't actually work under ACLs. Reported on Reddit
