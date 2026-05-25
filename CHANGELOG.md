@@ -9,6 +9,9 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Tailscale subnet router** (optional): new `docker-compose.tailscale.yml` and [docs/TAILSCALE.md](docs/TAILSCALE.md) for reaching the whole LAN (Pi-hole, `*.lan` domains, admin UIs, Home Assistant) from anywhere — including hotel WiFi and CGNAT networks where IPv4 inbound is unavailable. Pinned to `tailscale/tailscale:v1.98.3`, runs as a host-network container with `NET_ADMIN`, advertises `LAN_SUBNET` from `.env`. Complementary to Cloudflared, not a replacement
+
+### Documentation
+- **Tailscale surfaced across main docs** (SETUP, README, REFERENCE, MAINTENANCE, ARCHITECTURE): TOC entry, Choose-Your-Setup table row, requirements block, component-table row, compose-files table row, dedicated "+ tailscale" section in SETUP.md, services/compose subsections in REFERENCE.md, independent maintenance commands in MAINTENANCE.md, access-levels diagram block in ARCHITECTURE.md. New users following SETUP.md now discover Tailscale alongside Cloudflared as a parallel setup option
 - **REMOTE-ACCESS.md**: footer hint at the bottom of the Cloudflared walkthrough now links to TAILSCALE.md instead of saying "setup not covered here"
 
 ---
