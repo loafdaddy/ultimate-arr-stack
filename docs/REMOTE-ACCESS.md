@@ -2,6 +2,17 @@
 
 > Return to [Setup Guide](SETUP.md)
 
+The `+ remote access` tier has **two combinable paths**:
+
+- **Cloudflared** (this doc) — public HTTPS for Jellyfin/Seerr at `jellyfin.yourdomain.com`. Best for sharing streaming with non-technical users.
+- **[Tailscale](TAILSCALE.md)** — private mesh VPN exposing the whole LAN (admin UIs, `*.lan` domains) to just you and devices you authorise. Free, works behind CGNAT, no domain needed.
+
+You can run either, or both side-by-side — they serve different audiences.
+
+---
+
+## Cloudflared path
+
 Watch and request media from anywhere via `jellyfin.yourdomain.com` and `seerr.yourdomain.com`.
 
 **Requirements:**

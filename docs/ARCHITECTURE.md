@@ -89,8 +89,8 @@ arr-stack network (172.20.0.0/24)
 │ 172.20.0.9   │ Bazarr       │ Subtitles                      │ Core             │
 │ 172.20.0.5   │ Pi-hole      │ DNS server                     │ Core             │
 │ 172.20.0.2   │ Traefik      │ Reverse proxy                  │ + local DNS      │
-│ 172.20.0.12  │ Cloudflared  │ Tunnel to Cloudflare           │ + remote access  │
-│ host-network │ Tailscale    │ Mesh VPN subnet router         │ + tailscale      │
+│ 172.20.0.12  │ Cloudflared  │ Tunnel to Cloudflare           │ + remote access (Cloudflared) │
+│ host-network │ Tailscale    │ Mesh VPN subnet router         │ + remote access (Tailscale)   │
 │ 172.20.0.13  │ Uptime Kuma  │ Monitoring                     │ Optional         │
 │ 172.20.0.14  │ duc          │ Disk usage                     │ Optional         │
 │ 172.20.0.15  │ Beszel       │ System monitoring              │ Optional         │
@@ -122,29 +122,30 @@ arr-stack network (172.20.0.0/24)
 │  Your device → Pi-hole (DNS) → Traefik → Service                        │
 └─────────────────────────────────────────────────────────────────────────┘
                                     │
-                                    │ + Cloudflare Tunnel
+                                    │ + Cloudflared and/or Tailscale
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                        + REMOTE ACCESS                                   │
 │                   Access from outside your home                          │
-│  ┌─────────────────────┐  ┌─────────────────────┐                       │
-│  │ jellyfin.domain.com │  │ seerr.domain.com     │  ...                 │
-│  └─────────────────────┘  └─────────────────────┘                       │
 │                                                                          │
-│  Phone → Cloudflare → Tunnel → Traefik → Service                        │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    │ + Tailscale (independent / complementary)
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          + TAILSCALE                                     │
-│             Private full-LAN access from anywhere                        │
-│  ┌──────────────┐  ┌────────────────┐  ┌──────────────────────┐         │
-│  │ sonarr.lan   │  │ pihole.lan     │  │ homeassistant.lan    │  ...    │
-│  └──────────────┘  └────────────────┘  └──────────────────────┘         │
+│  ┌─── Path a: Cloudflared (public HTTPS via your domain) ──────────┐    │
+│  │                                                                  │    │
+│  │  ┌─────────────────────┐  ┌─────────────────────┐               │    │
+│  │  │ jellyfin.domain.com │  │ seerr.domain.com     │  ...          │    │
+│  │  └─────────────────────┘  └─────────────────────┘               │    │
+│  │  Phone → Cloudflare → Tunnel → Traefik → Service                │    │
+│  └──────────────────────────────────────────────────────────────────┘    │
 │                                                                          │
-│  Phone → Tailscale → LAN (10.10.0.0/24) → Service                       │
-│  (No public exposure; only your tailnet devices can reach the LAN)      │
+│  ┌─── Path b: Tailscale (private mesh VPN, full LAN access) ───────┐    │
+│  │                                                                  │    │
+│  │  ┌──────────────┐  ┌────────────────┐  ┌──────────────────────┐ │    │
+│  │  │ sonarr.lan   │  │ pihole.lan     │  │ homeassistant.lan    │ │    │
+│  │  └──────────────┘  └────────────────┘  └──────────────────────┘ │    │
+│  │  Phone → Tailscale → LAN (10.10.0.0/24) → Service               │    │
+│  │  (No public exposure; only authorised tailnet devices reach LAN)│    │
+│  └──────────────────────────────────────────────────────────────────┘    │
+│                                                                          │
+│  Combinable: run either path or both.                                    │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 

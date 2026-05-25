@@ -56,13 +56,13 @@
 |---------|-----|------|-------|
 | Traefik | 172.20.0.2 | 80 | Reverse proxy |
 
-**+ remote access** (cloudflared.yml):
+**+ remote access — Cloudflared path** (cloudflared.yml):
 
 | Service | IP | Port | Notes |
 |---------|-----|------|-------|
 | Cloudflared | 172.20.0.12 | — | Tunnel (no ports exposed) |
 
-**+ tailscale** (tailscale.yml):
+**+ remote access — Tailscale path** (tailscale.yml):
 
 | Service | IP | Port | Notes |
 |---------|-----|------|-------|
@@ -175,13 +175,13 @@ Services start in dependency order (handled automatically by `depends_on`):
 |---------|-------------|
 | Traefik | Reverse proxy for .lan domains |
 
-### `docker-compose.cloudflared.yml` (+ remote access)
+### `docker-compose.cloudflared.yml` (+ remote access — Cloudflared path)
 
 | Service | Description |
 |---------|-------------|
 | Cloudflared | Tunnel to Cloudflare for external access |
 
-### `docker-compose.tailscale.yml` (+ tailscale)
+### `docker-compose.tailscale.yml` (+ remote access — Tailscale path)
 
 | Service | Description |
 |---------|-------------|

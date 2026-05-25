@@ -48,8 +48,7 @@ Watch: Jellyfin — locally or remotely via Traefik
 |-------|----------------|---------------|
 | **Core** | `192.168.1.50:8096` | Just the stack |
 | **+ local DNS** | `jellyfin.lan` | Configure Pi-hole + add Traefik |
-| **+ remote access** | `jellyfin.yourdomain.com` | Add Cloudflare Tunnel |
-| **+ tailscale** | `sonarr.lan` from anywhere | Add Tailscale (free, works behind CGNAT) |
+| **+ remote access** | `jellyfin.yourdomain.com` (Cloudflared) and/or `sonarr.lan` from anywhere (Tailscale) | Cloudflare Tunnel and/or Tailscale — combinable |
 
 ## Get Started
 
@@ -60,8 +59,8 @@ Watch: Jellyfin — locally or remotely via Traefik
 | [Architecture](docs/ARCHITECTURE.md) | Understand how the stack fits together |
 | [App Configuration](docs/APP-CONFIG.md) | Configure each app — [script-assisted](docs/APP-CONFIG-QUICK.md) or [manual](docs/APP-CONFIG.md) |
 | [Local DNS](docs/LOCAL-DNS.md) | Set up `.lan` domains with Pi-hole + Traefik |
-| [Remote Access](docs/REMOTE-ACCESS.md) | Access Jellyfin/Seerr from anywhere via Cloudflare Tunnel |
-| [Tailscale](docs/TAILSCALE.md) | Reach the whole LAN (admin UIs, `*.lan`) from anywhere via Tailscale |
+| [Remote Access](docs/REMOTE-ACCESS.md) | + remote access overview — Cloudflare Tunnel for public Jellyfin/Seerr |
+| [Tailscale](docs/TAILSCALE.md) | + remote access (mesh-VPN path) — admin UIs and `*.lan` from anywhere |
 | [Utilities](docs/UTILITIES.md) | Monitoring, auto-recovery, disk usage tools |
 | [Quick Reference](docs/REFERENCE.md) | Cheat sheet: all URLs, ports, IPs, common commands |
 | [Upgrading](docs/UPGRADING.md) | How to pull updates and redeploy |

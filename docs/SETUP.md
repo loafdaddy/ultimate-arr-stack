@@ -14,7 +14,6 @@ Everything you need to go from zero to streaming. Works on any NAS or Docker hos
 - [Step 5: Check It Works](#step-5-check-it-works)
 - [+ local DNS (.lan domains)](#-local-dns-lan-domains--optional)
 - [+ remote access](#-remote-access--optional)
-- [+ tailscale](#-tailscale--optional)
 - [Backup](#backup)
 - [Optional Utilities](#optional-utilities)
 
@@ -28,10 +27,13 @@ Decide how you'll access your media stack:
 |-------|----------------|-------------------|----------|
 | **Core** | `192.168.1.50:8096` | Just `.env` + VPN credentials | Testing, single user |
 | **+ local DNS** | `jellyfin.lan` | Configure Pi-hole + add Traefik | Home/family use |
-| **+ remote access** | `jellyfin.yourdomain.com` | Add Cloudflare Tunnel | Watch/request from anywhere |
-| **+ tailscale** | `sonarr.lan` from anywhere | Add Tailscale (free) | Admin UIs + `.lan` from anywhere |
+| **+ remote access** | `jellyfin.yourdomain.com` (Cloudflared) and/or `sonarr.lan` from anywhere (Tailscale) | Cloudflare Tunnel and/or Tailscale | Watch/request from anywhere |
 
-**You can start simple and add features later.** The guide has checkpoints so you can stop at any level. `+ remote access` and `+ tailscale` are complementary — Cloudflared exposes public-facing media services, Tailscale gives you private access to the whole LAN.
+**You can start simple and add features later.** The guide has checkpoints so you can stop at any level.
+
+**`+ remote access` has two combinable paths** — pick one or both:
+- **a) Cloudflared** — public HTTPS for Jellyfin/Seerr via your domain (`jellyfin.yourdomain.com`). Best for sharing streaming with non-technical users.
+- **b) Tailscale** — private mesh VPN that exposes your whole LAN (admin UIs, `*.lan` domains) to just you and devices you authorise. Free, works behind CGNAT, doesn't need a domain.
 
 ---
 
@@ -61,11 +63,11 @@ Decide how you'll access your media stack:
 
 > **Why Usenet?** More reliable than public torrents (no fakes), faster downloads, SSL-encrypted (no VPN needed). See [SABnzbd setup](APP-CONFIG.md#43-sabnzbd-usenet-downloads).
 
-**For + remote access:**
+**For + remote access (Cloudflared path):**
 - **Domain name** (~$10/year) - [Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) recommended
 - **Cloudflare account** (free tier)
 
-**For + tailscale:**
+**For + remote access (Tailscale path):**
 - **Tailscale account** (free tier — up to 100 devices, personal use)
 
 ---
@@ -87,8 +89,8 @@ Decide how you'll access your media stack:
 | **Gluetun** | VPN container - routes download traffic through VPN so your ISP can't see what you download | Core |
 | **Pi-hole** | DNS server - blocks ads, provides Docker DNS | Core |
 | **Traefik** | Reverse proxy - enables `.lan` domains | + local DNS |
-| **Cloudflared** | Tunnel to Cloudflare - secure remote access without port forwarding | + remote access |
-| **Tailscale** | Mesh VPN - private full-LAN access from anywhere, traverses CGNAT | + tailscale |
+| **Cloudflared** | Tunnel to Cloudflare - secure remote access without port forwarding | + remote access (Cloudflared path) |
+| **Tailscale** | Mesh VPN - private full-LAN access from anywhere, traverses CGNAT | + remote access (Tailscale path) |
 
 ### Files You Need To Edit
 
@@ -98,11 +100,11 @@ Decide how you'll access your media stack:
 **+ local DNS:**
 - `.env` - Add NAS IP, Pi-hole password, Traefik macvlan settings
 
-**+ remote access:**
+**+ remote access (Cloudflared path):**
 - `.env` - Add domain, Traefik dashboard auth
 - `traefik/dynamic/vpn-services.yml` - Replace `yourdomain.com`
 
-**+ tailscale:**
+**+ remote access (Tailscale path):**
 - `.env` - Optional (`TS_HOSTNAME`, `TS_AUTHKEY`, `TS_EXTRA_ROUTES` all have sensible defaults). Defaults to advertising `LAN_SUBNET`
 
 **Files you DON'T edit:**
@@ -117,8 +119,8 @@ Decide how you'll access your media stack:
 |------|---------|--------------|
 | `docker-compose.arr-stack.yml` | Core media stack (Jellyfin, *arr apps, downloads, VPN) | Core |
 | `docker-compose.traefik.yml` | Reverse proxy for .lan domains and external access | + local DNS |
-| `docker-compose.cloudflared.yml` | Secure tunnel to Cloudflare (no port forwarding) | + remote access |
-| `docker-compose.tailscale.yml` | Mesh VPN subnet router for private LAN access | + tailscale |
+| `docker-compose.cloudflared.yml` | Secure tunnel to Cloudflare (no port forwarding) | + remote access (Cloudflared path) |
+| `docker-compose.tailscale.yml` | Mesh VPN subnet router for private LAN access | + remote access (Tailscale path) |
 | `docker-compose.utilities.yml` | Monitoring, auto-recovery, disk usage | Utilities (optional) |
 
 See [Quick Reference](REFERENCE.md) for full service lists, .lan URLs, and network details.
@@ -549,16 +551,12 @@ Access services by name (`http://sonarr.lan`) instead of port numbers. Requires 
 
 ## + remote access — Optional
 
-Watch and request media from anywhere via `jellyfin.yourdomain.com`. Requires a domain + Cloudflare Tunnel.
+Two combinable paths. Pick whichever fits — or both:
 
-**[→ Remote access setup guide](REMOTE-ACCESS.md)**
+**a) Cloudflared** — public HTTPS for Jellyfin and Seerr at `jellyfin.yourdomain.com`. Requires a domain (~$10/year) + free Cloudflare account.
+**[→ Cloudflared setup guide](REMOTE-ACCESS.md)**
 
----
-
-## + tailscale — Optional
-
-Reach the whole LAN (admin UIs, `*.lan` domains, Home Assistant, the NAS itself) from anywhere — including hotel WiFi and CGNAT networks. Free Tailscale account, no domain or port-forwarding needed. Complementary to `+ remote access`, not a replacement.
-
+**b) Tailscale** — private mesh VPN exposing the whole LAN (admin UIs, `*.lan` domains, Home Assistant) to just you and devices you authorise. Free, no domain needed, works behind CGNAT and hotel WiFi.
 **[→ Tailscale setup guide](TAILSCALE.md)**
 
 ---
