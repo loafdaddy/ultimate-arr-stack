@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.18] - 2026-06-06
+
+### Changed
+- **Cloudflared** 2026.5.1 → 2026.5.2
+- **Diun** 4.31.0 → 4.33.0
+- **Tailscale** v1.98.3 → v1.98.4
+
 ## [1.7.17] - 2026-06-06
 
 ### Added
