@@ -67,6 +67,46 @@ services:
       start_period: 10s
 
   # ═══════════════════════════════════════════════════════════════════════════
+  # GLUETUN-RECOVER - Closes a gap deunhealth cannot: services that use
+  # network_mode "service:gluetun" are SIGKILLed (exit 137) when gluetun
+  # restarts to rebuild its VPN tunnel, and may stay Exited (their netns is
+  # gone, so docker's restart policy can't rejoin it; compose's depends_on
+  # restart:true only fires for compose-driven restarts, not gluetun's own).
+  # deunhealth only restarts *running-but-unhealthy* containers, never Exited
+  # ones. This watcher restarts any container labelled gluetun.dependent=true
+  # that is Exited, both on startup and each time gluetun becomes healthy again.
+  # No web UI. Runs silently in background.
+  # ═══════════════════════════════════════════════════════════════════════════
+  gluetun-recover:
+    image: docker:26.1-cli
+    container_name: gluetun-recover
+    <<: *default-security
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - TZ=${TZ}
+    restart: always
+    logging: *default-logging
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        recover() {
+          ids=$$(docker ps -a --filter label=gluetun.dependent=true --filter status=exited -q)
+          [ -n "$$ids" ] && docker restart $$ids
+        }
+        # Recover anything already dead when this watcher (re)starts.
+        recover
+        # Then react whenever gluetun's VPN tunnel comes back healthy.
+        docker events --filter container=gluetun --filter event=health_status \
+          --format '{{.Action}}' | while read -r action; do
+            case "$$action" in
+              *unhealthy*) : ;;        # ignore the unhealthy transition
+              *healthy*)   recover ;;  # tunnel is back — revive dead dependents
+            esac
+          done
+
+  # ═══════════════════════════════════════════════════════════════════════════
   # UPTIME KUMA - Monitoring dashboard. Shows health of all your services.
   # Access: uptime.lan | NAS_IP:3001 (LAN-only, use WireGuard for remote)
   # ═══════════════════════════════════════════════════════════════════════════

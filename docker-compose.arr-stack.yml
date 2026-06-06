@@ -150,6 +150,7 @@ services:
       - ${MEDIA_ROOT}:/data
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:
@@ -181,6 +182,7 @@ services:
       - ${MEDIA_ROOT}:/data
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:
@@ -212,6 +214,7 @@ services:
       - ${MEDIA_ROOT}:/data
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:
@@ -242,6 +245,7 @@ services:
       - prowlarr-config:/config
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:
@@ -273,6 +277,7 @@ services:
       - ${MEDIA_ROOT}:/data
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:
@@ -484,6 +489,7 @@ services:
       - TZ=${TZ}
     labels:
       - deunhealth.restart.on.unhealthy=true
+      - gluetun.dependent=true  # gluetun-recover restarts this if SIGKILLed by a gluetun restart
     restart: always
     logging: *default-logging
     healthcheck:

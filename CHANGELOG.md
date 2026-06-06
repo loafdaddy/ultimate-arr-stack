@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.17] - 2026-06-06
+
+### Added
+- **`gluetun-recover` service**: a lightweight `docker:cli` watcher that revives any VPN-bound container that was SIGKILLed (exit 137) and left `Exited` when gluetun restarts to rebuild its tunnel. Closes a gap deunhealth structurally cannot cover — deunhealth only restarts *running-but-unhealthy* containers, never `Exited` ones, and compose's `depends_on: restart: true` only fires for compose-driven restarts, not gluetun's own `restart: always`. The watcher recovers dead dependents both on its own startup and on each gluetun `health_status: healthy` event. Triggered after qBittorrent silently stayed down for ~8h following a gluetun restart (uptime-kuma alerted but nothing auto-recovered it)
+
+### Changed
+- **Six VPN-bound services** (qBittorrent, SABnzbd, Sonarr, Radarr, Prowlarr, FlareSolverr) now carry a `gluetun.dependent=true` label so `gluetun-recover` can identify and restart them
+
 ## [1.7.16] - 2026-05-26
 
 ### Changed
