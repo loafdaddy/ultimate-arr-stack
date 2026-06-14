@@ -380,34 +380,23 @@ TZ=Europe/London              # Find yours: https://en.wikipedia.org/wiki/List_o
 Add your VPN credentials to `.env`. Gluetun supports 30+ providers—find yours below:
 
 <details>
-<summary><strong>Surfshark (WireGuard)</strong></summary>
+<summary><strong>OpenVPN providers</strong></summary>
 
-| Step | Screenshot |
-|:-----|:-----------|
-| 1. Go to [my.surfshark.com](https://my.surfshark.com/) → VPN → Manual Setup → Router → WireGuard | <img src="images/Surfshark/1.png" width="700"> |
-| 2. Select **"I don't have a key pair"** | <img src="images/Surfshark/2.png" width="700"> |
-| 3. Under Credentials, enter a name (e.g., `ugreen-nas`) | <img src="images/Surfshark/3.png" width="700"> |
-| 4. Click **"Generate a new key pair"** and copy both keys to your notes | <img src="images/Surfshark/4.png" width="700"> |
-| 5. Click **"Choose location"** and select a server (e.g., United Kingdom) | <img src="images/Surfshark/5.png" width="700"> |
-| 6. Click the **Download** arrow to get the `.conf` file | <img src="images/Surfshark/6.png" width="700"> |
+Use your provider's OpenVPN credentials and set the following values in `.env`:
 
-7. Open the downloaded `.conf` file and note the `Address` and `PrivateKey` values:
-   ```ini
-   [Interface]
-   Address = 10.14.0.2/16
-   PrivateKey = aBcDeFgHiJkLmNoPqRsTuVwXyZ...
-   ```
+```bash
+VPN_SERVICE_PROVIDER=<provider>
+VPN_TYPE=openvpn
+OPENVPN_USER=your_username
+OPENVPN_PASSWORD=your_password
+VPN_COUNTRIES=<country>
+```
 
-8. Edit `.env`:
-   ```bash
-   VPN_SERVICE_PROVIDER=surfshark
-   VPN_TYPE=wireguard
-   WIREGUARD_PRIVATE_KEY=your_private_key_here
-   WIREGUARD_ADDRESSES=10.14.0.2/16
-   VPN_COUNTRIES=United Kingdom
-   ```
+Supported providers include NordVPN, PIA, Mullvad, ProtonVPN, and many others. See the Gluetun wiki for provider-specific setup details.
 
 > **Note:** `VPN_COUNTRIES` in your `.env` maps to Gluetun's `SERVER_COUNTRIES` env var.
+
+</details>
 
 </details>
 
